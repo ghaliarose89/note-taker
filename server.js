@@ -24,14 +24,12 @@ app.get('/api/notes', (req, res) => {
 app.post('/api/notes', (req, res) => {
     const newNote = req.body;
     const data = JSON.stringify(newNote);
-    fs.writeFile ('Develop/db/db.json',data,err =>{
+    fs.writeFile ('./Develop/db/db.json',data, err =>{
         if (err) throw err;
     });
     
     
 });
-
-
 
 
     app.get('*', (req, res) => {
