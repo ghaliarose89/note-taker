@@ -22,15 +22,25 @@ app.get('/api/notes', (req, res) => {
 });
 
 app.post('/api/notes', (req, res) => {
-    const newNote = req.body;
-    const data = JSON.stringify(newNote);
-    fs.writeFile ('./Develop/db/db.json',data, err =>{
-        if (err) throw err;
-    });
-    
-    
-});
+    fs.readFile('./Develop/db/db.json', 'utf8', (err, data) => {
 
+            const notes = JSON.parse(data);
+            const newNote = {
+                id: notes.length + 1,
+                title: req.body.title,
+                text: req.body.text
+            };
+             notes.push(newNote);
+        const newdata = JSON.stringify(notes);
+        fs.writeFile ('./Develop/db/db.json',newdata, err =>{
+            if (err) throw err;
+            res.json(newNote)
+        });
+              
+    });
+
+});
+    
 
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, './Develop/public/index.html'));
@@ -39,4 +49,4 @@ app.post('/api/notes', (req, res) => {
 
     app.listen(PORT, () => {
         console.log(`API server now on port ${PORT}!`);
-    })
+    });
