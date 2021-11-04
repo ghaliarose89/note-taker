@@ -27,12 +27,13 @@ app.post('/api/notes', (req, res) => {
 
             const notes = JSON.parse(data);
             const newNote = {
-                id: notes.length + 1,
+                id: notes.length+1,
                 title: req.body.title,
                 text: req.body.text
             };
+            console.log(`id=${newNote.id}`)
              notes.push(newNote);
-        const newdata = JSON.stringify(notes);
+        const newdata = JSON.stringify(notes,null,4);
         fs.writeFile ('db/db.json',newdata, err =>{
             if (err) throw err;
             res.json(newNote)
@@ -42,8 +43,20 @@ app.post('/api/notes', (req, res) => {
 
 });
     app.delete ('/api/notes/:id' ,(req, res) => {
-        
-    } )
+        fs.readFile('db/db.json', 'utf8', (err, data) => {
+            const notes = JSON.parse(data);
+           const deletedNotes= notes.splice (req.params.id,1);
+           console.log (req.params.id);
+           console.log(`deletedNotes=${deletedNotes}`);
+           const newdata = JSON.stringify(notes,null,4);
+           console.log(`newdata${newdata}`);
+           fs.writeFile ('db/db.json',newdata, err =>{
+               if (err) throw err;
+               res.json(deletedNotes);
+           });
+
+    } );
+});
 
 
     app.get('*', (req, res) => {
