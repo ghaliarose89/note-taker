@@ -45,14 +45,14 @@ app.post('/api/notes', (req, res) => {
     app.delete ('/api/notes/:id' ,(req, res) => {
         fs.readFile('db/db.json', 'utf8', (err, data) => {
             const notes = JSON.parse(data);
-           const deletedNotes= notes.splice (req.params.id,1);
+           const deletedNotes = notes.filter(notes => notes.id!== req.params.id);
            console.log (req.params.id);
            console.log(`deletedNotes=${deletedNotes}`);
-           const newdata = JSON.stringify(notes,null,4);
+           const newdata = JSON.stringify(deletedNotes,null,4);
            console.log(`newdata${newdata}`);
            fs.writeFile ('db/db.json',newdata, err =>{
                if (err) throw err;
-               res.json(deletedNotes);
+               res.json(notes);
            });
 
     } );
