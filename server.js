@@ -5,14 +5,14 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
-
+app.use(express.json());
 
 app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, './Develop/public/notes.html'));
+    res.sendFile(path.join(__dirname, 'public/notes.html'));
 });
 
 app.get('/api/notes', (req, res) => {
-    fs.readFile('./Develop/db/db.json', 'utf8', (err, data) => {
+    fs.readFile('db/db.json', 'utf8', (err, data) => {
         if (err) console.log(err)
         else {
             const notes = JSON.parse(data);
@@ -22,7 +22,8 @@ app.get('/api/notes', (req, res) => {
 });
 
 app.post('/api/notes', (req, res) => {
-    fs.readFile('./Develop/db/db.json', 'utf8', (err, data) => {
+    
+    fs.readFile('db/db.json', 'utf8', (err, data) => {
 
             const notes = JSON.parse(data);
             const newNote = {
@@ -32,18 +33,21 @@ app.post('/api/notes', (req, res) => {
             };
              notes.push(newNote);
         const newdata = JSON.stringify(notes);
-        fs.writeFile ('./Develop/db/db.json',newdata, err =>{
+        fs.writeFile ('db/db.json',newdata, err =>{
             if (err) throw err;
             res.json(newNote)
         });
-              
+       
     });
 
 });
-    
+    app.delete ('/api/notes/:id' ,(req, res) => {
 
+    } )
+
+    
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, './Develop/public/index.html'));
+        res.sendFile(path.join(__dirname, 'public/index.html'));
     });
 
 
